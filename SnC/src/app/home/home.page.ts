@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { LoadingController, Platform, ToastController } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { finalize } from 'rxjs/operators';
-
+import { File } from '@ionic-native/file';
 const IMAGE_DIR = 'stored-images';
 
 interface LocalFile {
@@ -12,6 +12,7 @@ interface LocalFile {
 	path: string;
 	data: string;
 }
+  
 
 @Component({
 	selector: 'app-home',
@@ -46,8 +47,8 @@ export class HomePage implements OnInit {
 		})
 			.then(
 				(result) => {
-					this.loadFileData(result.files);
-				},
+					
+								},
 				async (err) => {
 					// Folder does not yet exists!
 					await Filesystem.mkdir({
@@ -64,6 +65,7 @@ export class HomePage implements OnInit {
 	// Get the actual base64 data of an image
 	// base on the name of the file
 	async loadFileData(fileNames: string[]) {
+
 		for (let f of fileNames) {
 			const filePath = `${IMAGE_DIR}/${f}`;
 
@@ -81,7 +83,7 @@ export class HomePage implements OnInit {
 	}
 
 	// Little helper
-	async presentToast(text) {
+	async presentToast(text: string) {
 		const toast = await this.toastCtrl.create({
 			message: text,
 			duration: 3000
@@ -119,17 +121,18 @@ async saveImage(photo: Photo) {
 }
 
 // https://ionicframework.com/docs/angular/your-first-app/3-saving-photos
+
 private async readAsBase64(photo: Photo) {
   if (this.plt.is('hybrid')) {
       const file = await Filesystem.readFile({
-          path: photo.path
+		path: photo.path!,
       });
 
       return file.data;
   }
   else {
       // Fetch the photo, read as a blob, then convert to base64 format
-      const response = await fetch(photo.webPath);
+      const response = await fetch(photo.webPath!);
       const blob = await response.blob();
 
       return await this.convertBlobToBase64(blob) as string;
@@ -170,7 +173,7 @@ async uploadData(formData: FormData) {
           })
       )
       .subscribe(res => {
-          if (res['success']) {
+           if(res){
               this.presentToast('File upload complete.')
           } else {
               this.presentToast('File upload failed.')
