@@ -1,0 +1,7 @@
+{
+  "name": "SnC",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
