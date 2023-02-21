@@ -12,7 +12,10 @@ def capacitor_pods
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
+<<<<<<< HEAD
   pod 'CapacitorCamera', :path => '../../node_modules/@capacitor/camera'
+=======
+>>>>>>> 1c27e7374238ff2f151a0cd973f897f9a52b22c1
   pod 'CapacitorFilesystem', :path => '../../node_modules/@capacitor/filesystem'
   pod 'CapacitorHaptics', :path => '../../node_modules/@capacitor/haptics'
   pod 'CapacitorKeyboard', :path => '../../node_modules/@capacitor/keyboard'

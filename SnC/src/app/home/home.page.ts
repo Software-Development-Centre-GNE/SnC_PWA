@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { HttpClient } from '@angular/common/http';
 import { LoadingController, Platform, ToastController } from '@ionic/angular';
-// Add the new import
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
-// Add one more import
 import { finalize } from 'rxjs/operators';
 
 const IMAGE_DIR = 'stored-images';
@@ -92,8 +90,7 @@ export class HomePage implements OnInit {
 	}
 
 	async selectImage() {
-		// TODO
-    const image = await Camera.getPhoto({
+		const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: false,
       resultType: CameraResultType.Uri,
@@ -103,59 +100,60 @@ export class HomePage implements OnInit {
   if (image) {
       this.saveImage(image)
   }
+}
 
-	}
+// Create a new file from a capture image
+async saveImage(photo: Photo) {
+  const base64Data = await this.readAsBase64(photo);
 
-	async startUpload(file: LocalFile) {
-		// TODO
-    const base64Data = await this.readAsBase64(photo);
+  const fileName = new Date().getTime() + '.jpeg';
+  const savedFile = await Filesystem.writeFile({
+      path: `${IMAGE_DIR}/${fileName}`,
+      data: base64Data,
+      directory: Directory.Data
+  });
 
-    const fileName = new Date().getTime() + '.jpeg';
-    const savedFile = await Filesystem.writeFile({
-        path: `${IMAGE_DIR}/${fileName}`,
-        data: base64Data,
-        directory: Directory.Data
-    });
+  // Reload the file list
+  // Improve by only loading for the new image and unshifting array!
+  this.loadFiles();
+}
 
-    // Reload the file list
-    // Improve by only loading for the new image and unshifting array!
-    this.loadFiles();
-    const response = await fetch(file.data);
-    const blob = await response.blob();
-    const formData = new FormData();
-    formData.append('file', blob, file.name);
-    this.uploadData(formData)
-	}
-  
-  // https://ionicframework.com/docs/angular/your-first-app/3-saving-photos
-  private async readAsBase64(photo: Photo) {
-    if (this.plt.is('hybrid')) {
-        const file = await Filesystem.readFile({
-            path: photo.path
-        });
+// https://ionicframework.com/docs/angular/your-first-app/3-saving-photos
+private async readAsBase64(photo: Photo) {
+  if (this.plt.is('hybrid')) {
+      const file = await Filesystem.readFile({
+          path: photo.path
+      });
 
-        return file.data;
-    }
-    else {
-        // Fetch the photo, read as a blob, then convert to base64 format
-        const response = await fetch(photo.webPath);
-        const blob = await response.blob();
+      return file.data;
+  }
+  else {
+      // Fetch the photo, read as a blob, then convert to base64 format
+      const response = await fetch(photo.webPath);
+      const blob = await response.blob();
 
-        return await this.convertBlobToBase64(blob) as string;
-    }
+      return await this.convertBlobToBase64(blob) as string;
+  }
 }
 
 // Helper function
 convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
-    const reader = new FileReader;
-    reader.onerror = reject;
-    reader.onload = () => {
-        resolve(reader.result);
-    };
-    reader.readAsDataURL(blob);
+  const reader = new FileReader;
+  reader.onerror = reject;
+  reader.onload = () => {
+      resolve(reader.result);
+  };
+  reader.readAsDataURL(blob);
 });
+	async startUpload(file: LocalFile) {
+		const response = await fetch(file.data);
+    const blob = await response.blob();
+    const formData = new FormData();
+    formData.append('file', blob, file.name);
+    this.uploadData(formData);
+	}
 
-// Upload the formData to our API
+  // Upload the formData to our API
 async uploadData(formData: FormData) {
   const loading = await this.loadingCtrl.create({
       message: 'Uploading image...',
@@ -181,8 +179,7 @@ async uploadData(formData: FormData) {
 }
 
 	async deleteImage(file: LocalFile) {
-		// TODO
-    await Filesystem.deleteFile({
+		await Filesystem.deleteFile({
       directory: Directory.Data,
       path: file.path
   });

@@ -2,17 +2,29 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+<<<<<<< HEAD
  	<key>NSCameraUsageDescription</key>
 	<string>To capture images</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>To add images</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To store images</string>
+=======
+>>>>>>> 1c27e7374238ff2f151a0cd973f897f9a52b22c1
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
         <string>SnC</string>
 	<key>CFBundleExecutable</key>
+<<<<<<< HEAD
+=======
+	<key>NSCameraUsageDescription</key>
+	<string>To capture images</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To add images</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To store images</string>
+>>>>>>> 1c27e7374238ff2f151a0cd973f897f9a52b22c1
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
