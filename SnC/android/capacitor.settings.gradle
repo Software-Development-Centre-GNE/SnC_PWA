@@ -5,6 +5,12 @@ project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/
 include ':capacitor-app'
 project(':capacitor-app').projectDir = new File('../node_modules/@capacitor/app/android')
 
+<<<<<<< HEAD
+include ':capacitor-camera'
+project(':capacitor-camera').projectDir = new File('../node_modules/@capacitor/camera/android')
+
+=======
+>>>>>>> 1c27e7374238ff2f151a0cd973f897f9a52b22c1
 include ':capacitor-filesystem'
 project(':capacitor-filesystem').projectDir = new File('../node_modules/@capacitor/filesystem/android')
 
