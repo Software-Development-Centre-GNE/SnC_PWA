@@ -5,6 +5,8 @@ import { LoadingController, Platform, ToastController } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { finalize } from 'rxjs/operators';
 import { File } from '@ionic-native/file';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+
 const IMAGE_DIR = 'stored-images';
 
 interface LocalFile {
@@ -26,7 +28,8 @@ export class HomePage implements OnInit {
 		private plt: Platform,
 		private http: HttpClient,
 		private loadingCtrl: LoadingController,
-		private toastCtrl: ToastController
+		private toastCtrl: ToastController,
+		private afStorage: AngularFireStorage
 	) {}
 
 	async ngOnInit() {
