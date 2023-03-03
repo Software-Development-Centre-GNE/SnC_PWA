@@ -40,7 +40,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { environment } from '../environments/environment';
+// import { environment } from '../environments/environment';
+import { environment } from '../environments/environment.prod';
 import { ServiceWorkerModule } from '@angular/service-worker';
 @NgModule({
   declarations: [AppComponent],
@@ -53,10 +54,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AngularFirestoreModule,
     AngularFireStorageModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      enabled: environment.production
     }),
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
