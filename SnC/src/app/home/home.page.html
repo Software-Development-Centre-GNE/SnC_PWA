@@ -22,18 +22,27 @@
 	</ng-container>
   </ion-content>
   
-  	
-  <ion-footer>
-	<ion-toolbar color="primary">
-	  <ion-button fill="clear" expand="full" color="light" (click)="selectImage()" *ngIf="!image">
-		<ion-icon slot="start" name="camera"></ion-icon>
-		Select Image
-	  </ion-button>
-	  <ion-button position="stacked" fill="clear" expand="full" color="light" (click)="uploadData()" *ngIf="image">
+  	 <!-- <ion-button position="stacked" fill="clear" expand="full" color="light" (click)="uploadData()" *ngIf="image">
 		<ion-icon slot="start" name="cloud-upload"></ion-icon>
 		Upload
-	  </ion-button>
-	</ion-toolbar>
+	  </ion-button> -->
+  <ion-footer>
+	<!-- <ion-toolbar> -->
+		<ion-button (click)="selectImage()" *ngIf="!image">
+			<img src="assets/icons/icons8-image-50.png"/>
+		  </ion-button>
+		  <ion-button (click)="selectImage()" *ngIf="!image">
+			<img src="assets/icons/icons8-music-50.png"/>
+		  </ion-button>
+		  <ion-button (click)="selectImage()" *ngIf="!image">
+			<img src="assets/icons/icons8-video-50.png"/>
+		  </ion-button>
+		  <ion-button (click)="selectImage()" *ngIf="!image">
+			<img src="assets/icons/icons8-compact-camera-50.png"/>
+		  </ion-button>
+
+	 
+	<!-- </ion-toolbar> -->
   </ion-footer>
   
 

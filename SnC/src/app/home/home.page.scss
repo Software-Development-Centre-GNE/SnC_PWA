@@ -12,6 +12,27 @@ ion-content {
   align-items: center;
   justify-content: center;
 }
+ion-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+ion-button {
+  margin: 10px;
+}
+
+@media screen and (min-width: 768px) {
+  ion-button {
+    margin: 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  ion-button {
+    margin: 30px;
+  }
+}
 
 .preview-image {
   max-width: 70%;
