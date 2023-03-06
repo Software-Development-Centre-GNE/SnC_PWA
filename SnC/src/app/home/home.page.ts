@@ -30,11 +30,17 @@ interface LocalFile {
 })
 
 export class HomePage {
-
-	imageUrl: string= "";
 	title: string= "";
 	notes: string= "";
-	image: string = "";
+
+	audioUrl: string | null = null;
+	imageUrl: string | null = null;
+videoUrl: string | null = null;
+// mediaUrl: string | null = null;
+audio: File | null = null;
+video: File | null = null;
+image: File | null = null;
+
 
 	constructor(
 		// private plt: Platform,
@@ -113,40 +119,49 @@ export class HomePage {
 // 		toast.present();
 // 	}
 
-	async selectImage() {
-	const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.Uri,
-      source: CameraSource.Photos // Camera, Photos or Prompt!
-  });
-
-  if (image) {
-      this.saveImage(image)
+selectImage() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+	input.multiple = false;
+    input.onchange = (event) => this.onImageSelected(event);
+    input.click();
   }
-}
-async saveImage(image: any) {
-	// Generate a random ID for the image file
-	const id = Math.random().toString(36).substring(2);
-  
-	// Convert the image URI to a Blob object
-	const response = await fetch(image.webPath);
-	const blob = await response.blob();
-  
-	// Upload the image to Firebase storage
-	const ref = this.afStorage.ref(`images/${id}`);
-	const task = ref.put(blob);
-  
-	// Get the download URL of the image after it has been uploaded
-	task.snapshotChanges().pipe(
-	  finalize(() => {
-		ref.getDownloadURL().subscribe(downloadUrl => {
-		  // Save the download URL to a variable in the correct data URL format
-		  this.imageUrl = `data:${blob.type};base64,${downloadUrl}`;
-		  this.image = this.imageUrl.split(',')[1];
-		});
-	  })
-	).subscribe();
+
+  onImageSelected(event: any): void {
+    if (event.target.files && event.target.files[0]) {
+      this.image = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imageUrl = e.target.result;
+		this.audioUrl = null;
+		this.videoUrl = null;
+      };
+      if (this.image) {
+        this.video = null;
+        this.audio = null;
+		this.audioUrl = null;
+		this.videoUrl = null;
+        reader.readAsDataURL(this.image);
+        const storageRef = this.afStorage.ref(`images/${this.image.name}`);
+        const uploadTask = storageRef.put(this.image);
+        uploadTask.snapshotChanges().pipe(
+          finalize(() => {
+            storageRef.getDownloadURL().subscribe((url) => {
+              this.imageUrl = url;
+			  this.audioUrl = null;
+		this.videoUrl = null;
+            });
+          })
+        ).subscribe();
+      }
+    }
+  }
+
+
+  async checkMedia(){
+
+	// if()
   }
   
   async uploadData() {
@@ -166,17 +181,101 @@ async saveImage(image: any) {
 	const data = {
 	  title: this.title,
 	  notes: this.notes,
-	  imageUrl: this.imageUrl
+	  dataUrl : this.imageUrl ? this.imageUrl : this.audioUrl ? this.audioUrl : this.videoUrl ? this.videoUrl : ""
 	};
+	console.log(data);
 	collectionRef.doc(id).set(data).then(() => {
-		this.image = "";
 		this.title = "";
 		this.notes = "";
+		this.audio = null;
+		this.image = null;
+    	this.video = null;
+		this.videoUrl = null;
+		this.imageUrl = null;
+		this.audioUrl = null;
 	  console.log('Data uploaded successfully');
 	}).catch((error: any) => {
 	  console.error('Error uploading data: ', error);
 	});
   }
+  selectAudio() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'audio/*';
+	input.multiple = false;
+    input.onchange = (event) => this.onAudioSelected(event);
+    input.click();
+  }
+
+  onAudioSelected(event: any): void {
+	if (event.target.files && event.target.files[0]) {
+	  this.audio = event.target.files[0];
+	  const reader = new FileReader();
+	  reader.onload = (e: any) => {
+		this.audioUrl = e.target.result;
+		this.imageUrl = null;
+		this.videoUrl = null;
+	  };
+	  if (this.audio) {
+		this.image = null;
+		this.video = null;
+		this.audioUrl = null;
+		this.videoUrl = null;
+		reader.readAsDataURL(this.audio);
+		const storageRef = this.afStorage.ref(`audio/${this.audio.name}`);
+		const uploadTask = storageRef.put(this.audio);
+		uploadTask.snapshotChanges().pipe(
+		  finalize(() => {
+			storageRef.getDownloadURL().subscribe((url) => {
+			  this.audioUrl = url;
+			  this.videoUrl = null;
+		    this.imageUrl = null;
+			});
+		  })
+		).subscribe();
+	  }
+	}
+  }
+  
+
+  selectVideo() {
+	const input = document.createElement('input');
+	input.type = 'file';
+	input.accept = 'video/*';
+	input.multiple = false;
+	input.onchange = (event) => this.onVideoSelected(event);
+	input.click();
+  }
+  
+  onVideoSelected(event: any) {
+	const file = event.target.files[0];
+	if (file) {
+	  const reader = new FileReader();
+	  this.video = file;
+	  reader.onload = () => {
+		this.videoUrl = reader.result as string;
+	  };
+	  if (this.video) {
+		this.image = null;
+		this.audio = null;	
+		this.audioUrl = null;
+		this.imageUrl = null;
+		reader.readAsDataURL(this.video);
+		const storageRef = this.afStorage.ref(`videos/${this.video.name}`);
+		const uploadTask = storageRef.put(this.video);
+		uploadTask.snapshotChanges().pipe(
+		  finalize(() => {
+			storageRef.getDownloadURL().subscribe((url) => {
+			  this.videoUrl = url;
+			  this.audioUrl = null;
+		      this.imageUrl = null;
+			});
+		  })
+		).subscribe();
+	  }
+	}
+  }
+  
 
 // async saveImage(image: any) {
 // 	// Generate a random ID for the image file

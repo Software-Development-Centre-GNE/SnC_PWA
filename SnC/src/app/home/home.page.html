@@ -4,46 +4,58 @@
 	</ion-toolbar>
 </ion-header>
 
-
 <ion-content>
-	<img [src]="image" id="previewImage" *ngIf="image" class="preview-image img-responsive" />
-  
-	<ng-container *ngIf="image">
-	  <ion-item>
-		<ion-label position="stacked">Title</ion-label>
-		<ion-input type="text" [(ngModel)]="title"></ion-input>
-	  </ion-item>
-  
-	  <ion-item>
-		<ion-label position="stacked">Notes</ion-label>
-		<ion-textarea [(ngModel)]="notes"></ion-textarea>
-	  </ion-item>
+	<div class="preview-container">
+		<img [src]="imageUrl" id="previewImage" *ngIf="imageUrl" class="preview-image" />
+		<audio controls *ngIf="audioUrl" class="preview-audio">
+		  <source [src]="audioUrl" type="audio/mpeg">
+		</audio>
+		<video #videoPlayer *ngIf="videoUrl" controls class="preview-video">
+		  <source [src]="videoUrl" type="video/mp4">
+		</video>
+	  </div>
+	  
 
-	</ng-container>
-  </ion-content>
+
+<ng-container *ngIf="video || audio || image">
   
-  	 <!-- <ion-button position="stacked" fill="clear" expand="full" color="light" (click)="uploadData()" *ngIf="image">
-		<ion-icon slot="start" name="cloud-upload"></ion-icon>
-		Upload
-	  </ion-button> -->
-  <ion-footer>
-	<!-- <ion-toolbar> -->
-		<ion-button (click)="selectImage()" *ngIf="!image">
+	<ion-item>
+	  <ion-label size="large" position="stacked">Title</ion-label>
+	  <ion-input type="text" [(ngModel)]="title"></ion-input>
+	</ion-item>
+  
+	<ion-item>
+	  <ion-label size="large"  position="stacked">Notes</ion-label>
+	  <ion-textarea [(ngModel)]="notes"></ion-textarea>
+	</ion-item>
+		<ion-button class="upload-button" expand="full" (click)="uploadData()">
+			<ion-icon slot="start" name="cloud-upload"></ion-icon>
+			Upload
+		  </ion-button>
+	
+	  
+  </ng-container>
+  </ion-content>
+
+	  <ion-footer>
+		<ion-button (click)="selectImage()" *ngIf="!image" class="btn">
 			<img src="assets/icons/icons8-image-50.png"/>
 		  </ion-button>
-		  <ion-button (click)="selectImage()" *ngIf="!image">
+		  <input type="file" accept="image/*" (change)="onImageSelected($event)" hidden />
+		  
+		  <ion-button (click)="selectAudio()" *ngIf="!audio" class="btn">
 			<img src="assets/icons/icons8-music-50.png"/>
 		  </ion-button>
-		  <ion-button (click)="selectImage()" *ngIf="!image">
+		  <input type="file" accept="audio/*" (change)="onAudioSelected($event)" hidden />
+		  
+		  <ion-button (click)="selectVideo()" *ngIf="!video" class="btn">
 			<img src="assets/icons/icons8-video-50.png"/>
 		  </ion-button>
-		  <ion-button (click)="selectImage()" *ngIf="!image">
-			<img src="assets/icons/icons8-compact-camera-50.png"/>
-		  </ion-button>
+		  <input type="file" accept="video/*" (change)="onVideoSelected($event)" hidden />
+		  
 
-	 
-	<!-- </ion-toolbar> -->
-  </ion-footer>
+</ion-footer>
+	  
   
 
 
